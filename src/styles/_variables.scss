@@ -1,0 +1,7 @@
+// SCSS-only helpers (breakpoints). Color/typography are CSS custom properties
+// in _tokens.scss so the palette can be swapped without touching components.
+
+$bp-sm: 40rem;   // 640px
+$bp-md: 48rem;   // 768px
+$bp-lg: 64rem;   // 1024px
+$bp-xl: 80rem;   // 1280px

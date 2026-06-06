@@ -1,0 +1,187 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+@keyframes card-in {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  transition:
+    transform var(--dur-base) var(--ease-out-quart),
+    border-color var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
+
+  animation: card-in 0.7s var(--ease-out-expo) both;
+
+  // Stagger across the grid — each card a bit later
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) { animation-delay: #{($i - 1) * 60}ms; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-2);
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--fs-300);
+  line-height: var(--lh-snug);
+  font-weight: 500;
+  letter-spacing: var(--tracking-snug);
+  color: var(--color-text);
+}
+
+.price {
+  font-family: var(--font-sans);
+  font-size: var(--fs-100);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-text);
+  font-feature-settings: "tnum";
+}
+
+.unit {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--color-text-subtle);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-align: right;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.desc {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.includes {
+  margin: 0;
+  padding: var(--space-2) 0 0 1rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+
+  li::marker { color: var(--color-accent); }
+}
+
+.variantSelect {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.variant {
+  appearance: none;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 0.78rem;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-muted);
+  transition: all var(--dur-fast) var(--ease-out-quart);
+
+  &[aria-pressed="true"] {
+    background: var(--color-text);
+    color: var(--color-text-inverse);
+    border-color: var(--color-text);
+  }
+
+  &:hover:not([aria-pressed="true"]) {
+    border-color: var(--color-text);
+    color: var(--color-text);
+  }
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2);
+  padding: var(--space-2);
+}
+
+.add {
+  appearance: none;
+  background: var(--color-accent-soft);
+  border: 1px solid transparent;
+  color: var(--color-accent-strong);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out-quart);
+
+  &:hover {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.consult {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 0.86rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--dur-fast) var(--ease-out-quart);
+
+  &:hover {
+    border-color: var(--color-text);
+    color: var(--color-text);
+  }
+
+  svg { width: 1em; height: 1em; }
+}

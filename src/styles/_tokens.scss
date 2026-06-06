@@ -1,0 +1,118 @@
+// =============================================================================
+// Design tokens — Dolce Moni
+//
+// Surface anchor: rgb(242 239 222) — warm cream.
+// Accent: oklch(0.72 0.12 332.65) — rose.
+// Cream + rose carry the identity. Neutrals are tinted warm; the accent
+// appears in <10% of the surface area (focal CTAs, key moments).
+// =============================================================================
+
+:root {
+  // ---- Surfaces ----------------------------------------------------------
+  // Three cream tones — page, elevated, recessed. Nothing more.
+  --color-bg:                rgb(242 239 222);
+  --color-surface:           oklch(0.988 0.010 92);   // cards, header panel
+  --color-surface-raised:    oklch(0.988 0.010 92);   // alias of --color-surface
+  --color-surface-sunken:    oklch(0.930 0.022 88);   // recessed bands, footer
+
+  // ---- Text — warm near-charcoal, bridges cream + rose -------------------
+  --color-text:              oklch(0.230 0.020 60);
+  --color-text-muted:        oklch(0.475 0.020 65);
+  --color-text-subtle:       oklch(0.635 0.018 75);
+  --color-text-inverse:      oklch(0.988 0.010 92);
+
+  // ---- Lines & focus -----------------------------------------------------
+  --color-border:            oklch(0.870 0.022 88);
+  --color-border-strong:     oklch(0.788 0.026 82);
+  --color-focus-ring:        oklch(0.72 0.12 332.65 / 0.55);
+
+  // ---- Accent — rose -----------------------------------------------------
+  --color-accent:            oklch(0.72 0.12 332.65);
+  --color-accent-hover:      oklch(0.62 0.13 332.65);
+  --color-accent-strong:     oklch(0.52 0.14 332.65);
+  --color-accent-contrast:   oklch(0.988 0.010 92);
+  --color-accent-soft:       oklch(0.940 0.034 340);
+  --color-accent-softer:     oklch(0.940 0.034 340);  // alias of --color-accent-soft
+
+  // ---- WhatsApp ----------------------------------------------------------
+  --color-whatsapp:          oklch(0.660 0.155 150);
+  --color-whatsapp-hover:    oklch(0.590 0.165 150);
+  --color-whatsapp-contrast: oklch(0.988 0.010 92);
+
+  // ---- Status ------------------------------------------------------------
+  --color-warning-surface:   oklch(0.962 0.034 70);
+  --color-warning-text:      oklch(0.350 0.080 50);
+
+  // ---- Typography --------------------------------------------------------
+  // next/font loads Petrona + Manrope locally. Literal 'Petrona' / 'Petrona
+  // Fallback' names are included for resilience and to satisfy explicit stack
+  // requirements (header brand).
+  --font-display: var(--font-petrona), "Petrona", "Petrona Fallback",
+                  ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans:    var(--font-manrope), "Manrope", "Manrope Fallback",
+                  ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  // Modular scale (1.25), fluid
+  --fs-50:  clamp(0.78rem, 0.76rem + 0.10vw, 0.84rem);
+  --fs-75:  clamp(0.88rem, 0.86rem + 0.10vw, 0.94rem);
+  --fs-100: 1rem;
+  --fs-200: clamp(1.05rem, 1.00rem + 0.25vw, 1.18rem);
+  --fs-300: clamp(1.20rem, 1.10rem + 0.45vw, 1.42rem);
+  --fs-400: clamp(1.50rem, 1.30rem + 0.90vw, 1.85rem);
+  --fs-500: clamp(1.95rem, 1.55rem + 1.70vw, 2.70rem);
+  --fs-600: clamp(2.40rem, 1.80rem + 2.60vw, 3.65rem);
+  --fs-700: clamp(2.85rem, 2.05rem + 3.80vw, 4.80rem);
+
+  --lh-tight: 1.04;
+  --lh-snug:  1.18;
+  --lh-body:  1.55;
+
+  --tracking-wide:  0.18em;
+  --tracking-tight: -0.02em;
+  --tracking-snug:  -0.012em;
+
+  // ---- Spacing -----------------------------------------------------------
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.5rem;
+  --space-6:  2rem;
+  --space-7:  3rem;
+  --space-8:  clamp(3rem,  2rem + 3vw, 5rem);
+  --space-9:  clamp(4rem,  2.5rem + 5vw, 7rem);
+  --space-10: clamp(5rem,  3rem + 7vw, 9rem);
+
+  // ---- Radius — single scale, applied everywhere ------------------------
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  // ---- Shadows — three levels, neutral-warm cast ------------------------
+  --shadow-1: 0 1px 2px oklch(0.30 0.02 70 / 0.06);
+  --shadow-2: 0 8px 24px -10px oklch(0.30 0.02 70 / 0.14);
+  --shadow-3: 0 24px 60px -22px oklch(0.30 0.02 70 / 0.22);
+
+  // ---- Layout -----------------------------------------------------------
+  --measure: 62ch;
+  --container-max: 1180px;
+  --header-h: 72px;
+
+  // ---- Motion -----------------------------------------------------------
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back:  cubic-bezier(0.34, 1.32, 0.64, 1);
+  --dur-fast:  160ms;
+  --dur-base:  280ms;
+  --dur-slow:  520ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
+}

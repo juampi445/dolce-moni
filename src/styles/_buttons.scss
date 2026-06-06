@@ -1,0 +1,78 @@
+@use "mixins" as *;
+
+%btn-base {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  letter-spacing: 0.005em;
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    color var(--dur-base) var(--ease-out-quart),
+    border-color var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
+  @include focus-ring;
+}
+
+.btn-ghost,
+.btn-ghost-lg {
+  @extend %btn-base;
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  font-size: var(--fs-100);
+  padding: 0.6rem 1.15rem;
+
+  // Elegant tonal shift — fills with a deep plum, white type. No translate.
+  &:hover {
+    background: var(--color-text);
+    color: var(--color-text-inverse);
+    border-color: var(--color-text);
+    box-shadow: 0 0 0 4px color-mix(in oklch, var(--color-text) 12%, transparent);
+  }
+
+  &:active {
+    box-shadow: 0 0 0 2px color-mix(in oklch, var(--color-text) 14%, transparent);
+  }
+}
+
+.btn-ghost-lg {
+  font-size: var(--fs-200);
+  padding: 0.9rem 1.6rem;
+  line-height: 1.2;
+}
+
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  position: relative;
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+  padding-bottom: 2px;
+  @include focus-ring;
+  transition: color var(--dur-fast) var(--ease-out-quart);
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform-origin: right center;
+    transform: scaleX(0.4);
+    transition: transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  &:hover {
+    color: var(--color-accent-hover);
+    &::after { transform: scaleX(1); transform-origin: left center; }
+  }
+}

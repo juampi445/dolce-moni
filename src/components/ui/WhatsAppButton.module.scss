@@ -1,0 +1,78 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.button {
+  --bg: var(--color-text);
+  --bg-hover: var(--color-accent-strong);
+  --fg: var(--color-text-inverse);
+  --ring-hover: color-mix(in oklch, var(--color-accent) 24%, transparent);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-100);
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--radius-pill);
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  // Allow wrap on narrow viewports — long labels (e.g. wholesale CTA) would
+  // otherwise overflow the container.
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
+  letter-spacing: 0.005em;
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    color var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
+  @include focus-ring;
+
+  // Subtle outer ring expansion on hover — no translate
+  &:hover {
+    background: var(--bg-hover);
+    box-shadow: 0 0 0 4px var(--ring-hover);
+  }
+
+  &:active {
+    box-shadow: 0 0 0 2px var(--ring-hover);
+  }
+}
+
+.lg {
+  font-size: var(--fs-200);
+  padding: 0.9rem 1.6rem;
+  line-height: 1.2;
+}
+
+.sm {
+  font-size: 0.95rem;
+  padding: 0.55rem 1.1rem;
+}
+
+.outline {
+  --bg: transparent;
+  --bg-hover: var(--color-text);
+  --fg: var(--color-text);
+  --ring-hover: color-mix(in oklch, var(--color-text) 14%, transparent);
+  border: 1px solid var(--color-border-strong);
+
+  &:hover {
+    color: var(--color-text-inverse);
+    border-color: var(--color-text);
+  }
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  transition: transform var(--dur-base) var(--ease-out-back);
+}
+
+.button:hover .icon { transform: rotate(-6deg); }
