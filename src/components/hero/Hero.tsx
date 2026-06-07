@@ -3,6 +3,8 @@ import styles from "./Hero.module.scss";
 import { SITE } from "@/lib/config";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { mensajeGenerico } from "@/lib/whatsapp";
+import alfajores from "@/assets/images/alfajores.svg";
+import tortas from "@/assets/images/tortas.svg";
 
 /** Clipped word wrapper for the GSAP page-load reveal. */
 function Word({ children }: { children: React.ReactNode }) {
@@ -48,14 +50,28 @@ export function Hero() {
         </div>
 
         <aside className={styles.seal} data-hero-el aria-hidden="true">
-          <div className={styles.sealRing}>
+          <div className={styles.sealStage}>
+            <div className={styles.sealRing}>
+              <Image
+                src="/logo-muffin.svg"
+                alt=""
+                width={420}
+                height={420}
+                priority
+                className={styles.sealLogo}
+              />
+            </div>
             <Image
-              src="/logo-muffin.svg"
+              src={alfajores}
               alt=""
-              width={420}
-              height={420}
               priority
-              className={styles.sealLogo}
+              className={styles.sealAlfajores}
+            />
+            <Image
+              src={tortas}
+              alt=""
+              priority
+              className={styles.sealTortas}
             />
           </div>
           <div className={styles.sealCaption}>

@@ -147,24 +147,59 @@
   @include from(md) {
     order: 1;
     justify-self: end;
-    transform: rotate(-4deg);
-    transform-origin: center;
+    // Anchor for the absolutely-positioned caption. With the caption taken out
+    // of flow, .seal is exactly the stage's height, so the grid centers the
+    // mashup vertically in the hero instead of biasing it upward.
+    position: relative;
   }
 }
 
-.sealRing {
+// Stage holds the seal ring and the overlapping alfajores as siblings, sized
+// to the seal diameter so the photo can be laid over it without being clipped.
+.sealStage {
   position: relative;
   width: clamp(220px, 42vh, 440px);
   aspect-ratio: 1;
+
+  @include from(md) {
+    width: clamp(260px, 50vh, 540px);
+  }
+}
+
+// Lowest layer of the mashup. Full-size centered circle on mobile; on desktop
+// it shrinks to the top-right vertex of the triangular arrangement.
+.sealRing {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
   border-radius: 50%;
-  background: var(--color-bg);
+  background:
+    radial-gradient(118% 118% at 50% 26%,
+      var(--color-bg),
+      color-mix(in oklch, var(--color-bg) 90%, var(--color-accent)));
   display: grid;
   place-items: center;
-  border: 1px solid color-mix(in oklch, var(--color-accent) 28%, transparent);
+  // Double pink ring (stamp look): a thin accent outer border, an empty bg gap,
+  // then a second thin accent ring inside.
+  border: 1px solid var(--color-accent);
+  // Elegant, layered seal shadow: the twin inset rings, a soft mid-diffusion,
+  // and a wide warm-pink ambient halo that lifts it off the page.
   box-shadow:
-    inset 0 0 0 7px var(--color-bg),
-    inset 0 0 0 8px color-mix(in oklch, var(--color-accent) 20%, transparent),
-    0 28px 70px -22px color-mix(in oklch, var(--color-accent) 42%, transparent);
+    inset 0 0 0 6px var(--color-bg),                                   // empty gap
+    inset 0 0 0 7px var(--color-accent),                               // inner ring
+    inset 0 0 0 13px var(--color-bg),                                  // interior edge
+    0 -8px 24px -12px oklch(0.30 0.02 70 / 0.08),                      // top diffusion
+    0 2px 4px oklch(0.30 0.02 70 / 0.06),
+    0 14px 28px -10px oklch(0.30 0.02 70 / 0.12),                      // bottom diffusion
+    0 0 70px -18px color-mix(in oklch, var(--color-accent) 30%, transparent); // even warm halo
+
+  @include from(md) {
+    inset: 0 0 auto auto; // top-right vertex
+    width: 58%;
+    height: 58%;
+    transform: scale(1.25); // grow from centre so it doesn't drift
+    transform-origin: center;
+  }
 }
 
 .sealLogo {
@@ -173,11 +208,73 @@
   object-fit: contain;
 }
 
+// Soft, layered ambient shadow shared by the food cut-outs — a tight contact
+// shadow plus two progressively wider diffusions for an elegant, grounded lift.
+@mixin food-shadow {
+  filter:
+    drop-shadow(0 2px 3px oklch(0.30 0.02 70 / 0.10))
+    drop-shadow(0 8px 14px oklch(0.30 0.02 70 / 0.10))
+    drop-shadow(0 26px 42px oklch(0.30 0.02 70 / 0.12));
+}
+
+// Top-left vertex — alfajores. Wide cut-out anchored to the upper-left.
+// Desktop only, like the rest of the mashup.
+.sealAlfajores {
+  display: none;
+
+  @include from(md) {
+    @include food-shadow;
+    display: block;
+    position: absolute;
+    z-index: 2;
+    left: -24%;
+    top: -22%;
+    width: 122%;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    transform: rotate(-3deg) scale(1); // grow from centre so it doesn't drift
+    transform-origin: center;
+  }
+}
+
+// Bottom-middle vertex — tortas. Tall cut-out standing in the centre-front,
+// closing the triangle below the seal and alfajores.
+.sealTortas {
+  display: none;
+
+  @include from(md) {
+    @include food-shadow;
+    display: block;
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    bottom: -120px;
+    width: auto;
+    height: 146%;
+    object-fit: contain;
+    pointer-events: none;
+    transform: translateX(-50%) rotate(2deg) scale(1.1); // grow from centre
+    transform-origin: center;
+  }
+}
+
 .sealCaption {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
+
+  // Desktop: pinned right under the mashup (the tortas hangs 100px below the
+  // stage), so the text stays attached to the bottom of the assets while the
+  // stage itself stays vertically centered.
+  @include from(md) {
+    position: absolute;
+    top: calc(100% - 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+  }
 }
 
 .sealMark {
