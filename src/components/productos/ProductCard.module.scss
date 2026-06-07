@@ -1,11 +1,6 @@
 @use "variables" as *;
 @use "mixins" as *;
 
-@keyframes card-in {
-  from { opacity: 0; transform: translate3d(0, 14px, 0); }
-  to   { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-
 .card {
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -18,17 +13,6 @@
     transform var(--dur-base) var(--ease-out-quart),
     border-color var(--dur-base) var(--ease-out-quart),
     box-shadow var(--dur-base) var(--ease-out-quart);
-
-  animation: card-in 0.7s var(--ease-out-expo) both;
-
-  // Stagger across the grid — each card a bit later
-  @for $i from 1 through 12 {
-    &:nth-child(#{$i}) { animation-delay: #{($i - 1) * 60}ms; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
 
   &:hover {
     transform: translateY(-2px);

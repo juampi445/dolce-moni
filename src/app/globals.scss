@@ -64,12 +64,13 @@ img, svg, video { display: block; max-width: 100%; height: auto; }
 
 .sr-only { @include sr-only; }
 
-// Reveal-on-scroll base state.
-// IMPORTANT: visible by default. If GSAP/ScrollTrigger fail to fire, content
-// stays readable. GSAP imperatively hides + animates from useEffect.
-[data-reveal] {
-  will-change: opacity, transform;
-}
+// Reveal-on-scroll: visible by default so content stays readable if GSAP fails;
+// GSAP imperatively hides + animates from useEffect.
+//
+// NB: no persistent `will-change` here. Leaving it on every reveal element keeps
+// each one on its own compositing layer forever; on mobile that many permanent
+// layers starves the compositor and leaves other content (image-heavy product
+// cards) painted blank until a repaint is forced. GSAP doesn't need the hint.
 
 // Word-splitter helpers (hero typographic reveal).
 // IMPORTANT: default state must be VISIBLE so the title is never blank if
@@ -84,5 +85,4 @@ img, svg, video { display: block; max-width: 100%; height: auto; }
 }
 .split-word > span {
   display: inline-block;
-  will-change: transform;
 }

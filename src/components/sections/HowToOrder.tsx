@@ -1,5 +1,6 @@
 import styles from "./HowToOrder.module.scss";
 import { SITE } from "@/lib/config";
+import { ShapeDivider } from "@/components/ui/ShapeDivider";
 
 const steps = [
   {
@@ -25,6 +26,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export function HowToOrder() {
   return (
     <section className={styles.section} id="pedido" aria-labelledby="pedido-title">
+      <ShapeDivider variant="curve" position="top" flipY />
+      <ShapeDivider variant="curve" position="bottom" flipX />
       <div className={styles.inner}>
         <header className={styles.head}>
           <p className={styles.eyebrow} data-reveal>Cómo realizar un pedido</p>

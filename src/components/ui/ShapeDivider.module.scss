@@ -1,0 +1,33 @@
+@use "variables" as *;
+
+.divider {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: clamp(38px, 6vw, 76px);
+  line-height: 0;
+  pointer-events: none;
+  z-index: 1;
+  // Fill source — overridden per section if a different surface is needed.
+  color: var(--color-surface-sunken);
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  path {
+    fill: currentColor;
+  }
+}
+
+// Sits in the neighbouring section, just above this one.
+.top {
+  bottom: 100%;
+}
+
+// Sits in the neighbouring section, just below this one.
+.bottom {
+  top: 100%;
+}

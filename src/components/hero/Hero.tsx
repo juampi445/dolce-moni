@@ -30,7 +30,9 @@ export function Hero() {
             <span className={styles.titleLine}>
               <Word>hecho</Word>{" "}
               <Word>con</Word>{" "}
-              <Word><em>tiempo</em>.</Word>
+              <Word><em>tiempo</em></Word>{" "}
+              <Word>y</Word>{" "}
+              <Word><em>amor</em>.</Word>
             </span>
           </h1>
 

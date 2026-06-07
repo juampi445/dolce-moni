@@ -41,15 +41,20 @@
   position: fixed;
   inset: 0;
   background: color-mix(in oklch, var(--color-text) 55%, transparent);
-  backdrop-filter: blur(2px);
   z-index: 60;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--dur-base) var(--ease-out-quart);
 
+  // Apply the blur ONLY while open. A viewport-covering element with an
+  // always-on backdrop-filter captures the page into a backdrop layer that some
+  // browsers fail to repaint as new content (e.g. the cards) scrolls into view —
+  // leaving it blank until a forced repaint (such as opening this very panel).
   &[data-open="true"] {
     opacity: 1;
     pointer-events: auto;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
 }
 
@@ -116,8 +121,10 @@
   text-align: center;
   color: var(--color-text-muted);
 
-  svg { width: 56px; height: 56px; margin: 0 auto var(--space-3); color: var(--color-text-subtle); }
+  > svg { width: 56px; height: 56px; margin: 0 auto var(--space-3); color: var(--color-text-subtle); }
   strong { display: block; font-family: var(--font-display); font-size: var(--fs-200); color: var(--color-text); margin-bottom: 4px; }
+
+  .keepShopping { margin-top: var(--space-5); }
 }
 
 .line {
@@ -196,6 +203,33 @@
 .send {
   width: 100%;
   justify-content: center;
+}
+
+// Secondary action — close the panel and return to the catalogue.
+.keepShopping {
+  @include reset-button;
+  @include focus-ring;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition:
+    border-color var(--dur-fast) var(--ease-out-quart),
+    background-color var(--dur-fast) var(--ease-out-quart);
+
+  svg { width: 1.05em; height: 1.05em; }
+
+  &:hover {
+    border-color: var(--color-text);
+    background: var(--color-surface-sunken);
+  }
 }
 
 .clear {

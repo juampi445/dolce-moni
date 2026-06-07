@@ -1,21 +1,37 @@
 @use "variables" as *;
 @use "mixins" as *;
 
+// Soft, layered ambient shadow shared by the food cut-outs — a tight contact
+// shadow plus two progressively wider diffusions for an elegant, grounded lift.
+@mixin food-shadow {
+  filter:
+    drop-shadow(0 2px 3px oklch(0.30 0.02 70 / 0.10))
+    drop-shadow(0 8px 14px oklch(0.30 0.02 70 / 0.10))
+    drop-shadow(0 26px 42px oklch(0.30 0.02 70 / 0.12));
+}
+
 // =============================================================================
-// Hero — three elements only, vertically centered as a unit:
-//   Left:  oversized title · short lead · CTAs
-//   Right: large logo seal (ring + caption)
-// Mobile: seal on top, copy centered below.
+// Hero — responsive tiers:
+//   Mobile  (<md):  stacked, centred. Small seal + tortas cut-out only.
+//   Tablet  (md):   stacked, centred. Larger seal + tortas.
+//   Desktop (lg+):  two columns. Full triangular mashup (seal · alfajores · tortas).
 // =============================================================================
 
 .hero {
   position: relative;
-  min-height: calc(100svh - var(--header-h));
   display: flex;
   align-items: center;
-  overflow: clip;
+  // `hidden` (not `clip`) so the bloom/cut-outs are contained on every browser,
+  // including those without `overflow: clip` support.
+  overflow: hidden;
   isolation: isolate;
-  padding-block: clamp(1.5rem, 3vh, 2.5rem);
+  // Mobile/tablet: hug the content so tall devices don't leave a big gap on top.
+  padding-block: clamp(2rem, 5vh, 3.5rem);
+
+  @include from(lg) {
+    min-height: calc(100svh - var(--header-h));
+    padding-block: clamp(1.5rem, 3vh, 2.5rem);
+  }
 }
 
 .bg {
@@ -55,7 +71,8 @@
   width: 100%;
   text-align: center;
 
-  @include from(md) {
+  // Two-column desktop layout only from lg — tablets keep the centred stack.
+  @include from(lg) {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     column-gap: clamp(2rem, 5vw, 5rem);
     justify-items: stretch;
@@ -63,7 +80,7 @@
   }
 }
 
-// ───────── Left column ─────────
+// ───────── Copy column ─────────
 .copy {
   display: flex;
   flex-direction: column;
@@ -72,7 +89,7 @@
   min-width: 0;
   order: 1;
 
-  @include from(md) {
+  @include from(lg) {
     align-items: flex-start;
     order: 0;
   }
@@ -82,8 +99,9 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  // Fluid against viewport WIDTH and HEIGHT — never overflows the fold.
-  font-size: clamp(3rem, min(12vh, 9.5vw), 8rem);
+  // Fluid against viewport WIDTH and HEIGHT. Low floor keeps long lines from
+  // overflowing very narrow screens (e.g. a folded Galaxy Z Fold).
+  font-size: clamp(2.3rem, min(12vh, 9.5vw), 8rem);
   line-height: 1.02;
   letter-spacing: -0.038em;
   color: var(--color-text);
@@ -111,7 +129,7 @@
   justify-content: center;
   gap: var(--space-3) var(--space-5);
 
-  @include from(md) { justify-content: flex-start; }
+  @include from(lg) { justify-content: flex-start; }
 }
 
 .inlineLink {
@@ -136,42 +154,56 @@
   }
 }
 
-// ───────── Right column — seal ─────────
+// ───────── Seal column ─────────
 .seal {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  // Snug gap on mobile/tablet so the caption sits right under the mashup.
+  gap: 0.75rem;
   order: 0;
 
-  @include from(md) {
+  @include from(lg) {
     order: 1;
     justify-self: end;
-    // Anchor for the absolutely-positioned caption. With the caption taken out
-    // of flow, .seal is exactly the stage's height, so the grid centers the
-    // mashup vertically in the hero instead of biasing it upward.
+    // Anchor for the absolutely-positioned caption so the grid centres the
+    // mashup vertically instead of biasing it upward.
     position: relative;
   }
 }
 
-// Stage holds the seal ring and the overlapping alfajores as siblings, sized
-// to the seal diameter so the photo can be laid over it without being clipped.
+// Stage holds the seal ring and the overlapping cut-outs as siblings.
 .sealStage {
   position: relative;
-  width: clamp(220px, 42vh, 440px);
   aspect-ratio: 1;
+  // Mobile: large — the mashup spans almost the full width.
+  width: clamp(300px, 92vw, 460px);
 
+  // Tablet: larger still.
   @include from(md) {
+    width: clamp(460px, 82vw, 620px);
+  }
+
+  // Desktop: sized by viewport height for the triangular mashup.
+  @include from(lg) {
     width: clamp(260px, 50vh, 540px);
   }
 }
 
-// Lowest layer of the mashup. Full-size centered circle on mobile; on desktop
-// it shrinks to the top-right vertex of the triangular arrangement.
+// Seal ring. Centred near the top on mobile/tablet; on desktop it shrinks to the
+// top-right vertex of the triangular arrangement.
 .sealRing {
   position: absolute;
-  z-index: 1;
-  inset: 0;
+  z-index: 2; // in front of the tortas so the logo stays visible
+  // Mobile/tablet: centred near the top; the tortas sits centred just below.
+  top: 0;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+  width: 72%;
+  height: auto;
+  aspect-ratio: 1;
   border-radius: 50%;
   background:
     radial-gradient(118% 118% at 50% 26%,
@@ -179,25 +211,22 @@
       color-mix(in oklch, var(--color-bg) 90%, var(--color-accent)));
   display: grid;
   place-items: center;
-  // Double pink ring (stamp look): a thin accent outer border, an empty bg gap,
-  // then a second thin accent ring inside.
   border: 1px solid var(--color-accent);
-  // Elegant, layered seal shadow: the twin inset rings, a soft mid-diffusion,
-  // and a wide warm-pink ambient halo that lifts it off the page.
   box-shadow:
-    inset 0 0 0 6px var(--color-bg),                                   // empty gap
-    inset 0 0 0 7px var(--color-accent),                               // inner ring
-    inset 0 0 0 13px var(--color-bg),                                  // interior edge
-    0 -8px 24px -12px oklch(0.30 0.02 70 / 0.08),                      // top diffusion
+    inset 0 0 0 6px var(--color-bg),
+    inset 0 0 0 7px var(--color-accent),
+    inset 0 0 0 13px var(--color-bg),
+    0 -8px 24px -12px oklch(0.30 0.02 70 / 0.08),
     0 2px 4px oklch(0.30 0.02 70 / 0.06),
-    0 14px 28px -10px oklch(0.30 0.02 70 / 0.12),                      // bottom diffusion
-    0 0 70px -18px color-mix(in oklch, var(--color-accent) 30%, transparent); // even warm halo
+    0 14px 28px -10px oklch(0.30 0.02 70 / 0.12),
+    0 0 70px -18px color-mix(in oklch, var(--color-accent) 30%, transparent);
 
-  @include from(md) {
+  @include from(lg) {
+    z-index: 1;
     inset: 0 0 auto auto; // top-right vertex
     width: 58%;
     height: 58%;
-    transform: scale(1.25); // grow from centre so it doesn't drift
+    transform: scale(1.25);
     transform-origin: center;
   }
 }
@@ -208,21 +237,11 @@
   object-fit: contain;
 }
 
-// Soft, layered ambient shadow shared by the food cut-outs — a tight contact
-// shadow plus two progressively wider diffusions for an elegant, grounded lift.
-@mixin food-shadow {
-  filter:
-    drop-shadow(0 2px 3px oklch(0.30 0.02 70 / 0.10))
-    drop-shadow(0 8px 14px oklch(0.30 0.02 70 / 0.10))
-    drop-shadow(0 26px 42px oklch(0.30 0.02 70 / 0.12));
-}
-
-// Top-left vertex — alfajores. Wide cut-out anchored to the upper-left.
-// Desktop only, like the rest of the mashup.
+// Top-left vertex — alfajores. Desktop only.
 .sealAlfajores {
   display: none;
 
-  @include from(md) {
+  @include from(lg) {
     @include food-shadow;
     display: block;
     position: absolute;
@@ -233,28 +252,36 @@
     height: auto;
     object-fit: contain;
     pointer-events: none;
-    transform: rotate(-3deg) scale(1); // grow from centre so it doesn't drift
+    transform: rotate(-3deg) scale(1);
     transform-origin: center;
   }
 }
 
-// Bottom-middle vertex — tortas. Tall cut-out standing in the centre-front,
-// closing the triangle below the seal and alfajores.
+// Tortas cut-out. On mobile/tablet it sits centred and grounded just below the
+// seal (a simple two-element mashup). On desktop it becomes the bottom-middle
+// vertex of the triangle, hanging below the stage.
 .sealTortas {
-  display: none;
+  @include food-shadow;
+  display: block;
+  position: absolute;
+  z-index: 3;
+  // Mobile/tablet: centred and large, sitting low so it overlaps the seal.
+  left: 50%;
+  right: auto;
+  bottom: -16%;
+  width: auto;
+  height: 104%;
+  object-fit: contain;
+  pointer-events: none;
+  transform: translateX(-50%) rotate(-2deg);
+  transform-origin: bottom center;
 
-  @include from(md) {
-    @include food-shadow;
-    display: block;
-    position: absolute;
-    z-index: 3;
+  @include from(lg) {
     left: 50%;
+    right: auto;
     bottom: -120px;
-    width: auto;
     height: 146%;
-    object-fit: contain;
-    pointer-events: none;
-    transform: translateX(-50%) rotate(2deg) scale(1.1); // grow from centre
+    transform: translateX(-50%) rotate(2deg) scale(1.1);
     transform-origin: center;
   }
 }
@@ -265,10 +292,7 @@
   align-items: center;
   gap: 3px;
 
-  // Desktop: pinned right under the mashup (the tortas hangs 100px below the
-  // stage), so the text stays attached to the bottom of the assets while the
-  // stage itself stays vertically centered.
-  @include from(md) {
+  @include from(lg) {
     position: absolute;
     top: calc(100% - 20px);
     left: 50%;

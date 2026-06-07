@@ -69,6 +69,12 @@ export function OrderPanel() {
               </svg>
               <strong>Tu pedido está vacío</strong>
               <span>Sumá productos desde la carta para armar el mensaje.</span>
+              <button type="button" className={styles.keepShopping} onClick={close}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Ver la carta
+              </button>
             </div>
           ) : (
             items.map((l) => (
@@ -121,6 +127,12 @@ export function OrderPanel() {
             size="lg"
             className={styles.send}
           />
+          <button type="button" className={styles.keepShopping} onClick={close}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Seguir agregando productos
+          </button>
           {items.length > 0 && (
             <button type="button" className={styles.clear} onClick={clear}>
               Vaciar pedido

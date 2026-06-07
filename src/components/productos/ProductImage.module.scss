@@ -19,9 +19,12 @@
   inset: 0;
   display: grid;
   place-items: center;
+  // Literal colours (not color-mix) — color-mix inside gradients is a known
+  // source of "not painted until repaint" bugs in Chromium. oklch(.../ .16) is
+  // the accent at 16% alpha, matching the previous color-mix output.
   background:
-    radial-gradient(120% 80% at 80% 0%, color-mix(in oklch, var(--color-accent) 16%, transparent), transparent 60%),
-    radial-gradient(120% 80% at 0% 100%, color-mix(in oklch, var(--color-accent-soft) 100%, transparent), transparent 60%),
+    radial-gradient(120% 80% at 80% 0%, oklch(0.72 0.12 332.65 / 0.16), transparent 60%),
+    radial-gradient(120% 80% at 0% 100%, var(--color-accent-soft), transparent 60%),
     var(--color-surface);
 
   &::before {

@@ -36,7 +36,7 @@ export function ProductsSection() {
       <header className={styles.head}>
         <p className={styles.eyebrow} data-reveal>La carta</p>
         <h2 id="productos-title" className={styles.title} data-reveal>
-          Hecho a mano, en porciones generosas.
+          Hecho a mano, en generosas y riquísimas porciones.
         </h2>
         <p className={styles.lead} data-reveal>
           Elegí lo que más te tienta. Agregalo a tu pedido o consultalo directo por WhatsApp,
