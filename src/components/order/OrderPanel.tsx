@@ -5,12 +5,7 @@ import styles from "./OrderPanel.module.scss";
 import { useOrder } from "./OrderContext";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { mensajePedido } from "@/lib/whatsapp";
-
-const fmtARS = new Intl.NumberFormat("es-AR", {
-  style: "currency",
-  currency: "ARS",
-  maximumFractionDigits: 0,
-});
+import { precioDe, fmtARS } from "@/lib/precio";
 
 export function OrderPanel() {
   const { items, count, totalARS, isOpen, close, remove, setCantidad, clear } = useOrder();
@@ -84,7 +79,7 @@ export function OrderPanel() {
                   {l.variante && <div className={styles.variant}>{l.variante}</div>}
                 </div>
                 <div className={styles.price}>
-                  {fmtARS.format(l.producto.precio * l.cantidad)}
+                  {fmtARS.format(precioDe(l.producto, l.variante) * l.cantidad)}
                 </div>
                 <div className={styles.qty}>
                   <div className={styles.qtyControl}>

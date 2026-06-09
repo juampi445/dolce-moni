@@ -14,6 +14,11 @@ export interface Producto {
   alt: string;
   destacado: boolean;
   variantes: string[] | null;
+  /**
+   * Optional per-variant price overrides, keyed by the variant label.
+   * When a selected variant is absent here, the base `precio` applies.
+   */
+  preciosVariante?: Record<string, number> | null;
   incluye: string[] | null;
   disponible: boolean;
   orden: number;

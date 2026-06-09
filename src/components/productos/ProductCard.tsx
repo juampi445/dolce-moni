@@ -6,6 +6,7 @@ import { ProductImage } from "./ProductImage";
 import { buildWhatsAppLink, mensajeProducto } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { useOrder } from "@/components/order/OrderContext";
+import { precioCardLabel } from "@/lib/precio";
 import type { Producto } from "@/types/producto";
 
 interface Props { producto: Producto }
@@ -35,7 +36,7 @@ export function ProductCard({ producto }: Props) {
         <header className={styles.head}>
           <h3 className={styles.name}>{producto.nombre}</h3>
           <div>
-            <p className={styles.price}>{producto.precioFormateado}</p>
+            <p className={styles.price}>{precioCardLabel(producto, variante)}</p>
             {producto.unidad && <span className={styles.unit}>{"/ "}{producto.unidad}</span>}
           </div>
         </header>

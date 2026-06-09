@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { precioDe } from "@/lib/precio";
 import type { Producto } from "@/types/producto";
 
 export interface OrderItem {
@@ -61,7 +62,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<OrderContextValue>(() => {
     const count = items.reduce((s, l) => s + l.cantidad, 0);
-    const totalARS = items.reduce((s, l) => s + l.producto.precio * l.cantidad, 0);
+    const totalARS = items.reduce((s, l) => s + precioDe(l.producto, l.variante) * l.cantidad, 0);
     return {
       items,
       count,
