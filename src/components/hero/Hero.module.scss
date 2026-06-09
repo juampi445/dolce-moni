@@ -1,14 +1,11 @@
 @use "variables" as *;
 @use "mixins" as *;
 
-// Soft, layered ambient shadow shared by the food cut-outs — a tight contact
-// shadow plus two progressively wider diffusions for an elegant, grounded lift.
-@mixin food-shadow {
-  filter:
-    drop-shadow(0 2px 3px oklch(0.30 0.02 70 / 0.10))
-    drop-shadow(0 8px 14px oklch(0.30 0.02 70 / 0.10))
-    drop-shadow(0 26px 42px oklch(0.30 0.02 70 / 0.12));
-}
+// Ambient shadow for the food cut-outs intentionally removed: any `filter`
+// makes some Chromium builds rasterize that subtree in sRGB instead of the
+// display's wide gamut, which desaturated the oklch-based UI. Left as a no-op
+// so existing `@include food-shadow;` call sites keep working.
+@mixin food-shadow {}
 
 // =============================================================================
 // Hero — responsive tiers:

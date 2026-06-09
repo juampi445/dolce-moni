@@ -1,13 +1,23 @@
 @use "variables" as *;
 @use "mixins" as *;
 
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .card {
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: var(--space-3);
   padding: var(--space-3);
+  // Subtle entrance — replays on filter change because the grid is keyed by the
+  // active filter and remounts. `both` holds the hidden state during the delay.
+  animation: card-in 900ms var(--ease-out-expo) both;
   border-radius: var(--radius-lg);
-  background: var(--color-surface-raised);
+  // Subtle tinted surface (already-defined token) so cards read as intentionally
+  // coloured rather than washed-out in the default paint.
+  background: var(--color-accent-soft);
   border: 1px solid var(--color-border);
   transition:
     transform var(--dur-base) var(--ease-out-quart),
@@ -15,7 +25,6 @@
     box-shadow var(--dur-base) var(--ease-out-quart);
 
   &:hover {
-    transform: translateY(-2px);
     border-color: var(--color-border-strong);
     box-shadow: var(--shadow-2);
   }
@@ -123,9 +132,10 @@
 
 .add {
   appearance: none;
-  background: var(--color-accent-soft);
+  // Solid, vivid accent so the primary action pops against the tinted card.
+  background: var(--color-accent);
   border: 1px solid transparent;
-  color: var(--color-accent-strong);
+  color: var(--color-accent-contrast);
   font-family: inherit;
   font-weight: 600;
   font-size: 0.92rem;
@@ -135,7 +145,7 @@
   transition: all var(--dur-fast) var(--ease-out-quart);
 
   &:hover {
-    background: var(--color-accent);
+    background: var(--color-accent-hover);
     color: var(--color-accent-contrast);
   }
 
@@ -168,4 +178,13 @@
   }
 
   svg { width: 1em; height: 1em; }
+}
+
+// Light stagger so cards cascade in rather than popping together.
+@for $i from 1 through 12 {
+  .card:nth-child(#{$i}) { animation-delay: #{($i - 1) * 40}ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { animation: none; }
 }

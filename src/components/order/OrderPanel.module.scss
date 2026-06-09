@@ -40,21 +40,24 @@
 .scrim {
   position: fixed;
   inset: 0;
-  background: color-mix(in oklch, var(--color-text) 55%, transparent);
+  // Plain dim overlay — deliberately NO backdrop-filter.
+  //
+  // A `backdrop-filter` anywhere on the page makes some Chromium builds
+  // rasterize the page's compositing layer in sRGB instead of the display's
+  // wide gamut (P3). That desaturates everything built on our oklch colour
+  // tokens — i.e. the product cards look "decolored". Opening this panel forced
+  // a transient wide-gamut repaint (cards looked correct), closing it snapped
+  // back to the sRGB raster (cards looked wrong again). Removing the blur
+  // entirely keeps colours stable and correct in every state.
+  background: color-mix(in oklch, var(--color-text) 60%, transparent);
   z-index: 60;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--dur-base) var(--ease-out-quart);
 
-  // Apply the blur ONLY while open. A viewport-covering element with an
-  // always-on backdrop-filter captures the page into a backdrop layer that some
-  // browsers fail to repaint as new content (e.g. the cards) scrolls into view —
-  // leaving it blank until a forced repaint (such as opening this very panel).
   &[data-open="true"] {
     opacity: 1;
     pointer-events: auto;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
   }
 }
 

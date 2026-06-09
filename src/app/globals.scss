@@ -47,6 +47,19 @@ h1, h2, h3, h4 {
 
 p { margin: 0; max-width: var(--measure); }
 
+// Wide-gamut paint fix.
+// The page's oklch accent colours were being gamut-clamped to sRGB (visibly
+// desaturated "decolored" cards) until some compositing/reflow pass re-rasterized
+// the page — which is exactly what opening the cart did (it locks body scroll and
+// composites an overlay), so the cards only looked right while the cart was open.
+// Promoting <main> to a single, persistent, color-managed compositing layer makes
+// that correct render path permanent. <main> contains no fixed/sticky descendants,
+// so the new containing block changes nothing else.
+main {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
 a {
   color: inherit;
   text-decoration: none;

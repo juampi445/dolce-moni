@@ -11,6 +11,7 @@ const links = [
   { href: "#productos", label: "Carta" },
   { href: "#pedido", label: "Cómo pedir" },
   { href: "#mayoristas", label: "Mayoristas" },
+  { href: "#sobre-mi", label: "Sobre mí" },
   { href: "#contacto", label: "Contacto" },
 ];
 
