@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./ProductImage.module.scss";
 
 interface Props {
@@ -22,6 +22,33 @@ export function ProductImage({ imagenes, alt, monogram = "dm", intervalMs = FALL
   const visibleRef = useRef(true);
 
   const hasMultiple = imagenes.length > 1;
+
+  const markLoaded = useCallback((i: number) => {
+    setLoaded((prev) => {
+      if (prev.has(i)) return prev;
+      const next = new Set(prev);
+      next.add(i);
+      return next;
+    });
+  }, []);
+
+  const markFailed = useCallback((i: number) => {
+    setFailed((prev) => {
+      if (prev.has(i)) return prev;
+      const next = new Set(prev);
+      next.add(i);
+      return next;
+    });
+  }, []);
+
+  // Closes the SSR/hydration race: if an <img> already finished loading before
+  // React attached its onLoad/onError handlers (cached or very fast responses),
+  // the events never fire — so we settle its state from `complete` on mount.
+  const settleFromComplete = useCallback((i: number, node: HTMLImageElement | null) => {
+    if (!node || !node.complete) return;
+    if (node.naturalWidth > 0) markLoaded(i);
+    else markFailed(i);
+  }, [markLoaded, markFailed]);
 
   useEffect(() => {
     if (!hasMultiple) return;
@@ -77,26 +104,13 @@ export function ProductImage({ imagenes, alt, monogram = "dm", intervalMs = FALL
             aria-hidden={isActive ? undefined : true}
           >
             <img
+              ref={(node) => settleFromComplete(i, node)}
               src={src}
               alt={isActive ? alt : ""}
               loading={i === 0 ? "eager" : "lazy"}
               decoding="async"
-              onLoad={() =>
-                setLoaded((prev) => {
-                  if (prev.has(i)) return prev;
-                  const next = new Set(prev);
-                  next.add(i);
-                  return next;
-                })
-              }
-              onError={() =>
-                setFailed((prev) => {
-                  if (prev.has(i)) return prev;
-                  const next = new Set(prev);
-                  next.add(i);
-                  return next;
-                })
-              }
+              onLoad={() => markLoaded(i)}
+              onError={() => markFailed(i)}
             />
           </div>
         );
